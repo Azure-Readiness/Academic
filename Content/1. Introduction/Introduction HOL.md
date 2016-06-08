@@ -1,5 +1,5 @@
 <a name="HOLTitle"></a>
-# Connecting to Azure and Set Up the Lab VM #
+# Connecting to Azure and Setting Up the Lab VM #
 
 ---
 
