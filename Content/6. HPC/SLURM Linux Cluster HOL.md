@@ -276,7 +276,7 @@ In this exercise, you will upload the slurmdemo.* files to the master node of th
     XXXXXXXXXX@jrslurmlab.westus.cloudapp.azuire.com's password:
     Welcome to Ubuntu 15.04 (GNU/Linux 3.19.0-25-generic x86_64)
 
-     * Documentation:  https://help.ubuntu.com/
+      Documentation:  https://help.ubuntu.com/
 
       System information as of Sun Aug  9 03:33:04 UTC 2015
 
