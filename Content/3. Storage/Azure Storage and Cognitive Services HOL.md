@@ -30,6 +30,7 @@ The following are required to complete this hands-on lab:
 
 - A Microsoft Azure subscription - [sign up for a free trial](http://aka.ms/WATK-FreeTrial)
 - Visual Studio 2015 (provided for you in the lab VM)
+- The Microsoft Azure Storage Explorer (provided for you in the lab VM)
 
 ---
 <a name="Exercises"></a>
@@ -38,7 +39,7 @@ The following are required to complete this hands-on lab:
 This hands-on lab includes the following exercises:
 
 - [Exercise 1: Create a storage account](#Exercise1)
-- [Exercise 2: Install the Microsoft Azure Storage Explorer](#Exercise2)
+- [Exercise 2: Run the Microsoft Azure Storage Explorer](#Exercise2)
 - [Exercise 3: Create a new Web app in Visual Studio](#Exercise3)
 - [Exercise 4: Add a lightbox for viewing photos](#Exercise4)
 - [Exercise 5: Use Cognitive Services to generate metadata](#Exercise5)
@@ -127,19 +128,11 @@ The [Azure Portal](https://portal.azure.com) allows you to perform basic storage
 You have now created a storage account to hold images uploaded to the app you're going to build, and containers to store the images in. Note that you *could* create these containers from within the app. Whether to create them programmatically or create them as part of the provisioning process is a choice that's left up to app developers.
 
 <a name="Exercise2"></a>
-## Exercise 2: Install the Microsoft Azure Storage Explorer
+## Exercise 2: Run the Microsoft Azure Storage Explorer
 
-The [Microsoft Azure Storage Explorer](http://storageexplorer.com/) is a free tool that provides a graphical interface for working with Azure Storage on PCs running Windows, OS X, and Linux. It provides most of the same functionality as the Azure Portal. It also offers features the portal does not, such as the ability to upload blobs to Azure Storage and view blob metadata. In this exercise, you will install and configure the Microsoft Azure Storage Explorer.
+The [Microsoft Azure Storage Explorer](http://storageexplorer.com/) is a free tool that provides a graphical interface for working with Azure Storage on PCs running Windows, OS X, and Linux. It provides most of the same functionality as the Azure Portal. It also offers features the portal does not, such as the ability to upload blobs to Azure Storage and view blob metadata. In this exercise, you will use the Microsoft Azure Storage Explorer to view the containers you created in Exercise 1.
 
-1. Open your browser and navigate to [http://storageexplorer.com/](http://storageexplorer.com/).
-
-1. Click **Download for Windows** since you're running in a Windows VM.
-
-    ![Downloading the Microsoft Azure Storage Explorer](images/download-storage-explorer.png)
-
-    _Downloading the Microsoft Azure Storage Explorer_
-
-1. Once the download completes, install the Microsoft Azure Storage Explorer and then start it.
+1. Start the Microsoft Azure Storage Explorer.
 
 1. In the Storage Explorer window, click **Connect to Microsoft Azure**.
 

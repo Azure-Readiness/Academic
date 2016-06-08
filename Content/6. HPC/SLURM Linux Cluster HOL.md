@@ -28,7 +28,8 @@ In this hands-on lab, you will learn how to:
 The following are required to complete this hands-on lab:
 
 - A Microsoft Azure subscription - [sign up for a free trial](http://aka.ms/WATK-FreeTrial)
-- A Visual Studio VM image provided to you by the instructor
+- The Microsoft Azure Storage Explorer (provided for you in the lab VM)
+- PuTTY (provided for you in the lab VM)
 
 ---
 <a name="Exercises"></a>
@@ -36,14 +37,14 @@ The following are required to complete this hands-on lab:
 
 This hands-on lab includes the following exercises:
 
-1. [Exercise 1: Create a resource group to hold the SLURM cluster](#Exercise1)
-1. [Exercise 2: Create a SLURM cluster using an Azure Quickstart template](#Exercise2)
-1. [Exercise 3: Create storage containers and upload images](#Exercise3)
-1. [Exercise 4: Prepare the job scripts](#Exercise4)
-1. [Exercise 5: Copy the job scripts, configure the nodes, and run the job](#Exercise5)
-1. [Exercise 6: View the converted images](#Exercise6)
-1. [Exercise 7: Suspend the SLURM cluster](#Exercise7)
-1. [Exercise 8: Delete the SLURM cluster](#Exercise8)
+- [Exercise 1: Create a resource group to hold the SLURM cluster](#Exercise1)
+- [Exercise 2: Create a SLURM cluster using an Azure Quickstart template](#Exercise2)
+- [Exercise 3: Create storage containers and upload images](#Exercise3)
+- [Exercise 4: Prepare the job scripts](#Exercise4)
+- [Exercise 5: Copy the job scripts, configure the nodes, and run the job](#Exercise5)
+- [Exercise 6: View the converted images](#Exercise6)
+- [Exercise 7: Suspend the SLURM cluster](#Exercise7)
+- [Exercise 8: Delete the SLURM cluster](#Exercise8)
 
 Estimated time to complete this lab: **60** minutes.
 
