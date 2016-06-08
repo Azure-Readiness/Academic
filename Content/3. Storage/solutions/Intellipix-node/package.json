@@ -1,0 +1,21 @@
+{
+  "name": "azure-storage-and-cognitive-services-lab",
+  "version": "1.0.0",
+  "description": "Azure Storage and Cognitive Services Lab (NodeJS)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dave F. Baskin <dfbaskin@gmail.com> (http://dfbaskin.com/)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=4.0"
+  },
+  "dependencies": {
+    "azure-storage": "^1.0.1",
+    "express": "^4.13.4",
+    "multer": "^1.1.0",
+    "request": "^2.72.0",
+    "streamifier": "^0.1.1"
+  }
+}

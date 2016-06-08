@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Azure Storage and Cognitive Services Lab</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .ng-cloak { display: none !important; }
+    .image-list > .col-md-3:nth-child(4n+1) {
+      clear: both;
+    }
+  </style>
+</head>
+<body class="ng-cloak">
+
+  <div class="container body-content" ng-controller="mainCtrl as ctrl">
+
+    <h1>Image Analysis</h1>
+
+    <div class="well">
+      <form class="form-inline" ng-if="!ctrl.analysis.inProgress">
+        <div class="form-group">
+          <label>
+            <span>Select Image to Analyze:</span>
+            <input type="file" name="imageFile" on-file-selected="ctrl.imageFileSelected(file)">
+          </label>
+        </div>
+      </form>
+      <p ng-if="ctrl.analysis.inProgress">
+        <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+        Analyzing Image ...
+      </p>
+    </div>
+
+    <div class="alert alert-success alert-dismissible" role="alert" ng-if="ctrl.analysis.result">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+      <strong>Success!</strong> Uploaded and analyzed {{ctrl.analysis.result.name}}
+    </div>
+    <div class="alert alert-danger alert-dismissible" role="alert" ng-if="ctrl.analysis.error">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      {{ctrl.analysis.error.message}}
+    </div>
+
+    <div class="image-list row">
+      <div class="col-md-3" ng-repeat="img in ctrl.images">
+        <div class="thumbnail">
+
+          <img ng-src="{{img.url}}">
+          <ul class="list-unstyled">
+            <li><strong>{{img.name}}</strong></li>
+            <li ng-repeat="caption in img.metadata.result.description.captions">
+              {{caption.text}}
+            </li>
+
+            <li><strong>Tags</strong></li>
+            <li>
+              <span ng-repeat="tag in img.metadata.result.tags">{{tag.name}} </span>
+            </li>
+
+            <li><strong>Details</strong></li>
+            <li>
+              {{img.metadata.result.metadata.width}} x {{img.metadata.result.metadata.height}}
+              (W x H {{img.metadata.result.metadata.format}})
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+  <script src="index.js"></script>
+
+</body>
+</html>
