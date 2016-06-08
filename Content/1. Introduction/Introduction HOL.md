@@ -174,9 +174,17 @@ Now you know how to log in to the Azure Portal, as well as how to view usage dat
 
 In this exercise, you will create a VM in Azure that has already been provisioned with Visual Studio 2015, Visual Studio Code, and other tools you will use in subsequent labs. Then you will remote into the VM using Remote Desktop.
 
-1. tk.
+1. In your browser, navigate to the [Azure One-Day Training](https://github.com/Azure-Readiness/Azure-One-Day-Training) repository on GitHub. This is the public repository in which the course materials for this class are stored. At the bottom of the repository's home page, click the **Deploy to Azure** button.
 
-1. tk.
+    ![Azure training GitHub repository](Images/deploy-to-azure.png)
+
+    _Azure training GitHub repository_
+
+1. In the Azure Portal, tk.
+
+    ![Caption](Images/placeholder.png)
+
+    _Caption_
 
 1. tk.
 
