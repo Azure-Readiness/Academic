@@ -188,17 +188,45 @@ In this exercise, you will create a VM in Azure that has already been provisione
 
 1. tk.
 
-1. tk.
+    ![Caption](Images/placeholder.png)
+
+    _Caption_
 
 1. tk.
 
-1. tk.
+    ![Caption](Images/placeholder.png)
+
+    _Caption_
+
+1. If you're warned that the publisher of the remote connection can't be verified, click **Connect**.
+
+    ![Caption](Images/remote-desktop-connection-1.png)
+
+    _Caption_
+
+1. In the Windows Security dialog that ensues, click **Use another account**. Then log in with the user name and password you created for the VM.
+
+    ![Caption](Images/enter-credentials.png)
+
+    _Caption_
+
+1. If you're warned again that the publisher of the remote connection can't be verified, click **Yes**.
+
+    ![Caption](Images/remote-desktop-connection-2.png)
+
+    _Caption_
 
 1. tk.
 
-1. tk.
+    ![Caption](Images/placeholder.png)
+
+    _Caption_
 
 1. tk.
+
+    ![Caption](Images/placeholder.png)
+
+    _Caption_
 
 1. tk.
 
