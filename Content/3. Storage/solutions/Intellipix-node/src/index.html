@@ -11,6 +11,12 @@
     .image-list > .col-md-3:nth-child(4n+1) {
       clear: both;
     }
+    a img {
+      cursor: pointer;
+    }
+    .image-modal img {
+      width: 100%;
+    }
   </style>
 </head>
 <body class="ng-cloak">
@@ -49,7 +55,9 @@
       <div class="col-md-3" ng-repeat="img in ctrl.images">
         <div class="thumbnail">
 
-          <img ng-src="{{img.url}}">
+          <a ng-click="ctrl.showImageDetails(img)">
+            <img ng-src="{{img.url}}">
+          </a>
           <ul class="list-unstyled">
             <li><strong>{{img.name}}</strong></li>
             <li ng-repeat="caption in img.metadata.result.description.captions">
@@ -68,6 +76,71 @@
             </li>
 
           </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade image-modal" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Image Details</h4>
+          </div>
+          <div class="modal-body">
+            <img ng-src="{{ctrl.current.fullUrl}}">
+            <div class="row">
+              <div class="col-md-12">
+                <h3>{{ctrl.current.name}}</h3>
+                <div>
+                  {{ctrl.current.metadata.result.metadata.width}} x {{ctrl.current.metadata.result.metadata.height}}
+                  (W x H {{ctrl.current.metadata.result.metadata.format}})
+                </div>
+                <hr />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <strong>Captions</strong>
+              </div>
+              <div class="col-md-6">
+                <strong>Tags</strong>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <ul class="list-unstyled">
+                  <li ng-repeat="caption in ctrl.current.metadata.result.description.captions">
+                    {{caption.text}}
+                    <div class="progress">
+                      <div class="progress-bar" role="progressbar"
+                           aria-valuenow="{{caption.confidence * 100}}" aria-valuemin="0" aria-valuemax="100"
+                           ng-style="{ width: (caption.confidence * 100) + '%' }">
+                        {{caption.confidence * 100 | number:1}}%
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <ul class="list-unstyled">
+                  <li ng-repeat="tag in ctrl.current.metadata.result.tags">
+                    {{tag.name}}
+                    <div class="progress">
+                      <div class="progress-bar" role="progressbar"
+                           aria-valuenow="{{tag.confidence * 100}}" aria-valuemin="0" aria-valuemax="100"
+                           ng-style="{ width: (tag.confidence * 100) + '%' }">
+                        {{tag.confidence * 100 | number:1}}%
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
         </div>
       </div>
     </div>

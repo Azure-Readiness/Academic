@@ -190,6 +190,12 @@ function listBlobsMiddleware(req, res) {
                     ".blob.core.windows.net/thumbnails/",
                     entry.name
                 ].join("");
+                entry.fullUrl = [
+                    "https://",
+                    cfg.storageAccount,
+                    ".blob.core.windows.net/photos/",
+                    entry.name
+                ].join("");
                 entry.metadata = entry.metadata || {};
                 entry.metadata.result = entry.metadata.result ?
                     JSON.parse(entry.metadata.result) :

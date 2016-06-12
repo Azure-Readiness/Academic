@@ -6,6 +6,7 @@
             inProgress: false
         };
         this.images = [];
+        this.current = null;
         this.loadImageList();
     }
     mainController.prototype = {
@@ -48,6 +49,13 @@
                 .catch(function(err) {
                     alert(err.toString());
                 });
+        },
+
+        showImageDetails: function(img) {
+            // console.log(img);
+            // console.log(JSON.stringify(img.metadata.result, null, 2));
+            this.current = img;
+            angular.element("#imageModal").modal();
         }
     };
 
