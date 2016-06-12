@@ -47,7 +47,7 @@
                     ctrl.images = result.data.entries || [];
                 })
                 .catch(function(err) {
-                    alert(err.toString());
+                    alert((err.data && err.data.message) || err.toString());
                 });
         },
 
