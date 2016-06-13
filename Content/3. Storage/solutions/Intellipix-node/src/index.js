@@ -7,9 +7,40 @@
         };
         this.images = [];
         this.current = null;
+        this.searchText = '';
+        this.imageFilter = imageFilter.bind(this);
         this.loadImageList();
+
+        function imageFilter(img) {
+            var search = this.searchText;
+            var result = img && img.metadata && img.metadata.result;
+            var idx, captions, tags;
+            if(!search || !result) {
+                return true;
+            }
+            if(containsText(img.name, search)) {
+                return true;
+            }
+            captions = (result.description && result.description.captions) || [];
+            for(idx in captions) {
+                if(containsText(captions[idx].text, search)) {
+                    return true;
+                }
+            }
+            tags = result.tags || [];
+            for(idx in tags) {
+                if(containsText(tags[idx].name, search)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
     mainController.prototype = {
+
+        clearSearchText: function() {
+            this.searchText = '';
+        },
 
         imageFileSelected: function(file) {
             var ctrl = this, formData;
@@ -75,6 +106,10 @@
                 });
             }
         };
+    }
+
+    function containsText(text, search) {
+        return (text && search) ? (text.toLowerCase().indexOf(search.toLowerCase()) > -1) : false;
     }
 
     angular

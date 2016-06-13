@@ -26,12 +26,27 @@
     <h1>Image Analysis</h1>
 
     <div class="well">
-      <form class="form-inline" ng-if="!ctrl.analysis.inProgress">
-        <div class="form-group">
-          <label>
-            <span>Select Image to Analyze:</span>
-            <input type="file" name="imageFile" on-file-selected="ctrl.imageFileSelected(file)">
-          </label>
+      <form ng-if="!ctrl.analysis.inProgress">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="form-group">
+              <label for="imageFile">Select Image to Analyze:</label>
+              <input type="file" id="imageFile" name="imageFile" on-file-selected="ctrl.imageFileSelected(file)">
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="form-group">
+              <label for="searchText">Search:</label>
+              <div class="input-group">
+                <input type="text" id="searchText" ng-model="ctrl.searchText" class="form-control">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button" ng-click="ctrl.clearSearchText()">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </form>
       <p ng-if="ctrl.analysis.inProgress">
@@ -52,7 +67,7 @@
     </div>
 
     <div class="image-list row">
-      <div class="col-md-3" ng-repeat="img in ctrl.images">
+      <div class="col-md-3" ng-repeat="img in ctrl.images | filter:ctrl.imageFilter">
         <div class="thumbnail">
 
           <a ng-click="ctrl.showImageDetails(img)">
