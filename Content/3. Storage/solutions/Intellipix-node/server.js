@@ -12,7 +12,7 @@ var storage = multer.memoryStorage();
 var uploadImage = multer({ storage: storage }).single('imageFile');
 
 app.post('/api/image-upload', configurationMiddleware, uploadImage, imageHandlerMiddleware);
-app.get('/api/images', configurationMiddleware, listBlobsMiddleware);
+app.get('/api/images', configurationMiddleware, noCacheMiddleware, listBlobsMiddleware);
 app.use('/', express.static('src'));
 app.use(errorHandlerMiddleware);
 
@@ -214,3 +214,9 @@ function errorHandlerMiddleware(err, req, res, next) {
     });
 }
 
+function noCacheMiddleware(req, res, next) {
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next();
+}
