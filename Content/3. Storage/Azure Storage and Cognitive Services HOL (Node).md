@@ -42,11 +42,10 @@ This hands-on lab includes the following exercises:
 
 - [Exercise 1: Create a storage account](#Exercise1)
 - [Exercise 2: Run the Microsoft Azure Storage Explorer](#Exercise2)
-- [Exercise 3: Create a new project in Visual Studio Code](#Exercise3)
-- [Exercise 4: Add a lightbox for viewing photos](#Exercise4)
-- [Exercise 5: Use Cognitive Services to generate metadata](#Exercise5)
-- [Exercise 6: Add search to the app](#Exercise6)
-- [Exercise 7: Deploy the app to Azure](#Exercise7)
+- [Exercise 3: Get a subscription key for the Computer Vision API](#Exercise3)
+- [Exercise 4: Write the app in Visual Studio Code](#Exercise4)
+- [Exercise 5: Test the app in your browser](#Exercise5)
+- [Exercise 6: Deploy the app to Azure](#Exercise8)
 
 Estimated time to complete this lab: **60** minutes.
 
@@ -163,179 +162,11 @@ The [Microsoft Azure Storage Explorer](http://storageexplorer.com/) is a free to
 The containers are currently empty, but that will change once your app is deployed and you start uploading photos. Having Storage Explorer installed will make it easy for you to see what your app writes to blob storage.
 
 <a name="Exercise3"></a>
-## Exercise 3: Create a new project in Visual Studio Code
+## Exercise 3: Get a subscription key for the Computer Vision API
 
-In this exercise, you will create a new Web app in Visual Studio Code and add code to implement the basic functionality required to upload images, write them to blob storage, and display them in a Web page.
+[Microsoft Cognitive Services](https://www.microsoft.com/cognitive-services/) is a set of intelligence APIs that you can call from your apps. Among the more than 20 APIs it offers are the [Computer Vision API](https://www.microsoft.com/cognitive-services/en-us/computer-vision-api) for distilling actionable information from images, the [Emotion API](https://www.microsoft.com/cognitive-services/en-us/emotion-api) for recognizing emotion in images and video, and the [Text Analytics API](https://www.microsoft.com/cognitive-services/en-us/text-analytics-api) for extracting sentiments and other information from text (for example, Twitter feeds). These APIs make it possible to build smart apps that would have been impossible just a few short years ago. And they're available in preview form for you to begin using today.
 
-1. Create a project directory named "Intellipix" for the lab in the location of your choice — for example, "C:\DXLabs\Intellipix."
-
-1. Open a Command Prompt window and execute the following command, substituting the name of the storage account you created in Exercise 1 for *storage_account_name*:
-
-	<pre>
-	set AZURE_STORAGE_ACCOUNT=<i>storage_account_name</i>
-	</pre>
-
-1. Return to the Azure Portal for a moment and open the blade for the storage account you created in Exercise 1. Then click the key icon near the top of the blade. 
-
-    ![Viewing the storage account's access keys](Images/view-access-keys.png)
-
-    _Viewing the storage account's access keys_
-
-1. Click the **Copy** button to the right of **key1** to copy the access key to the clipboard.
-
-    ![Copying the storage account's access key](Images/copy-access-key.png)
-
-    _Copying the storage account's access key_
-
-1. Return to the Command Prompt window and type the following command, replacing *storage_account_key* with the access key on the clipboard:
-
-	<pre>
-	set AZURE_STORAGE_ACCESS_KEY=<i>storage_account_key</i>
-	</pre>
-
-1. In the Command Prompt window, **navigate to the directory you created in Step 1** and execute the following command (note the space and the period in the command) to start Visual Studio Code in that directory:
-
-	<pre>
-	code .
-	</pre>
-
-1. In Visual Studio Code, click the **Git** button in the ribbon on the left.
-
-    ![The Git button in Visual Studio Code](images/node-git-button.png)
-
-    _The Git button in Visual Studio Code_
-
-1. Click **Initialize git repository** to initialize a Git repository in the working directory and place the directory under source control.
-
-    ![Initializing a Git repository](images/node-initialize-git-repository.png)
-
-    _Initializing a Git repository_
-
-1. Return to the Command Prompt window and make sure you're still in the directory that you created for the project (the directory that was just placed under source control). Then execute the following command to initialize the project. When prompted for an author name, enter your name:
-
-	<pre>
-	npm init -y
-	</pre> 
-
-1. Now execute the following command to install the NPM packages that the app will use:
-
-	<pre>
-    npm install -save azure-storage express multer request streamifier
-	</pre> 
-
-1. Return to Visual Studio Code and click **package.json** to open that file for editing.
-
-    ![Opening package.json for editing](images/node-open-package-json.png)
-
-    _Opening package.json for editing_
-
-1. On line 20, change the Node version number to 4.0. Then save your changes.
-
-    ![Changing the Node version number](images/node-change-node-version.png)
-
-    _Changing the Node version number_
-
-1. Use the **File -> New File** command to create a new file containing the following statements:
-
-    <pre>
-	.vscode/
-	node_modules/
-	</pre>
-
-1. Use the **File -> Save File** command to save the file and name it .gitignore.
-
-1. Add a file named server.js to the project and insert the following statements:
-
-	```javascript
-	```
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. Upload a few more images from this lab's "resources/photos" folder. Confirm that they appear on the page, too:
-
-    ![Intellipix with three photos uploaded](Images/three-photos-uploaded.png)
-
-    _Intellipix with three photos uploaded_
-
-1. Return to the Microsoft Azure Storage Explorer (or restart if it you didn't leave it running) and double-click the "photos" container under the storage account you created in Exercise 1. The number of blobs in the container should equal the number of photos you uploaded. Double-click one of the blobs to download it and see the image stored in the blob.
-
-    ![Contents of the "photos" container](Images/photos-container.png)
-
-    _Contents of the "photos" container_
-
-1. Open the "thumbnails" container in Storage Explorer. How many blobs do you see there? Open one of the blobs to see what's inside. These are the thumbnail images generated from the image uploads.
-
-1. Do a **View Source** in your browser to view the source for the page. Find the \<img\> elements representing the image thumbnails. Observe that the URLs assigned to the images refer **directly to blobs in blob storage**. This is possible because you set the containers' **Access type** to **Blob**, which makes the blobs inside them publicly accessible.
-
-	> What would happen if the containers were private? If you're not sure, try it and see. Temporaily change the "thumbnails" container's **Access type** to **Private** in the Azure Portal. Then refresh the Intellipix page in your browser and see what happens.
-
-The app doesn't yet offer a way to view the original images that you uploaded. Ideally, clicking an image thumbnail should display the original image. Let's implement that before proceeding further. 
-
-<a name="Exercise4"></a>
-## Exercise 4: Add a lightbox for viewing photos
-
-In this exercise, you will use a free, open-source JavaScript library to add a lightbox viewer enabling users to see the original images that they uploaded (rather than just the image thumbnails). The files are provided for you in subfolders of this lab's "resources" folder. All you have to do is integrate them into the project and make a minor modification to Index.cshtml.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. Launch the application in your browser. Then click one of the images you uploaded earlier. Confirm that a lightbox appears showing an enlarged view of the image.
-
-    ![An enlarged image](Images/lightbox-image.png)
-
-    _An enlarged image_
-
-1. Click the **X** in the lower-right corner of the lightbox to dismiss it.
-
-Now you have a way to view the images you uploaded. The next step is to do more with those images.
-
-<a name="Exercise5"></a>
-## Exercise 5: Use Cognitive Services to generate metadata
-
-Now comes the fun part: using [Microsoft Cognitive Services](https://www.microsoft.com/cognitive-services/) to generate captions and search keywords for the photos you upload. Cognitive Services is a set of intelligence APIs that you can call from your apps. Among the more than 20 APIs it offers are the [Computer Vision API](https://www.microsoft.com/cognitive-services/en-us/computer-vision-api) for distilling actionable information from images, the [Emotion API](https://www.microsoft.com/cognitive-services/en-us/emotion-api) for recognizing emotion in images and video, and the [Text Analytics API](https://www.microsoft.com/cognitive-services/en-us/text-analytics-api) for extracting sentiments and other information from text (for example, Twitter feeds). These APIs make it possible to build smart apps that would have been impossible just a few short years ago. And they're available in preview form for you to begin using today.
-
-In this exercise, you will use the Computer Vision API to generate a caption for each image that is uploaded, as well as keywords describing the contents of the image. You will store this data in metadata attached to each blob in the "photos" container.
-
-1. Begin by using the Azure Storage Explorer to delete the blobs in the "photos" container and the "thumbnails" container. (Do not delete the containers themselves.) This will allow you to start fresh with a new batch of images to process with the Computer Vision API.
+In this exercise, you will acquire a subscription key allowing you to call the Computer Vision API from your code. You'll use this key in Exercise 4 to generate thumbnails from the images uploaded to the Web site, and also to generate captions and searchable metadata for the images.
 
 1. In order to use the Computer Vision API, you need to sign up for a free account and acquire a subscription key. To do that, point your browser to [https://www.microsoft.com/cognitive-services/en-us/subscriptions](https://www.microsoft.com/cognitive-services/en-us/subscriptions).
 
@@ -365,102 +196,619 @@ In this exercise, you will use the Computer Vision API to generate a caption for
 
     _Copying the subscription key to the clipboard_
 
-1. Return to Visual Studio Code. Open the Web.config file at the root of the project and add the following statement to the \<appSettings\> section of the file, replacing *subscription_key* with the key you copied to the clipboard in the previous step:
+<a name="Exercise4"></a>
+## Exercise 4: Write the app in Visual Studio Code
 
-	````C#
-    <add key="SubscriptionKey" value="subscription_key" />
-	````
-	Save your changes and close Web.config.
+In this exercise, you will create a new Node.js app in Visual Studio Code and add code to upload images, write them to blob storage, display them in a Web page, generate captions and keywords using the Computer Vision API, and perform keyword searches on uploaded images. The app will be named Intellipix (for "Intelligent Pictures") and will be accessed through your browser. 
 
-1. tk.
+1. Create a project directory named "Intellipix" for the lab in the location of your choice — for example, "C:\DXLabs\Intellipix."
 
-1. tk.
+1. Open a Command Prompt window and execute the following command, substituting the Computer Vision API key you copied to the clipboard in the previous exercise for *vision_api_key*:
 
-1. tk.
+	<pre>
+	set AZURE_VISION_API_KEY=<i>vision_api_key</i>
+	</pre>
 
-1. tk.
+1. Next, execute the following command, substituting the name of the storage account you created in Exercise 1 for *storage_account_name*:
 
-1. tk.
+	<pre>
+	set AZURE_STORAGE_ACCOUNT=<i>storage_account_name</i>
+	</pre>
 
-1. tk.
+1. Return to the Azure Portal for a moment and open the blade for the storage account you created in Exercise 1. Then click the key icon near the top of the blade. 
 
-1. tk.
+    ![Viewing the storage account's access keys](Images/view-access-keys.png)
 
-1. tk.
+    _Viewing the storage account's access keys_
 
-1. tk.
+1. Click the **Copy** button to the right of **key1** to copy the access key to the clipboard.
 
-1. tk.
+    ![Copying the storage account's access key](Images/copy-access-key.png)
 
-1.  Launch the application in your browser. Upload a few images from this lab's "resources/photos" folder as you did before.
+    _Copying the storage account's access key_
 
-1. Hover the cursor over one of the thumbnails. Confirm that a tooltip window appears containing the computer-generated caption for the image.
+1. Return to the Command Prompt window and type the following command, replacing *storage_account_key* with the access key on the clipboard:
 
-    ![The computer-generated caption](Images/thumbnail-with-tooltip.png)
+	<pre>
+	set AZURE_STORAGE_ACCESS_KEY=<i>storage_account_key</i>
+	</pre>
+
+1. In the Command Prompt window, **navigate to the Intellipix directory you created in Step 1** and execute the following command (note the space and the period at the end of the command) to start Visual Studio Code in that directory:
+
+	<pre>
+	code .
+	</pre>
+
+1. In Visual Studio Code, click the **Git** button in the ribbon on the left.
+
+    ![The Git button in Visual Studio Code](images/node-git-button.png)
+
+    _The Git button in Visual Studio Code_
+
+1. Click **Initialize git repository** to initialize a Git repository in the working directory and place the directory under source control.
+
+    ![Initializing a Git repository](images/node-initialize-git-repository.png)
+
+    _Initializing a Git repository_
+
+1. Return to the Command Prompt window and make sure you're still in the directory that you created for the project (the directory that was just placed under source control). Then execute the following command to initialize the project. When prompted for an author name, enter your name.
+
+	<pre>
+	npm init -y
+	</pre> 
+
+1. Now execute the following command to install the NPM packages that the app will use:
+
+	<pre>
+    npm install -save azure-storage express multer request streamifier
+	</pre> 
+
+1. Return to Visual Studio Code and click the **Explorer** button in the upper-left corner. Then click **package.json** to open that file for editing.
+
+    ![Opening package.json for editing](images/node-edit-package-json.png)
+
+    _Opening package.json for editing_
+
+1. Add the following statements to package.json just before the "keywords" definition. Then save your changes.
+
+	```json
+	"engines": {
+	  "node": ">=4.0"
+	},
+	```
+
+1. Place the mouse cursor over "INTELLIPIX" in the Explorer window and click the **New File** button that appears. Name the new file ".gitignore" (without quotation marks). Be sure to include the leading period in the file name.
+
+    ![Adding a file](images/node-add-file.png)
+
+    _Adding a file_
+
+1. Add the following statements to .gitignore to exclude the specified directories from source control:
+
+    <pre>
+	.vscode/
+	node_modules/
+	</pre>
+
+1. Add a file named server.js to the project and insert the following statements:
+
+	```javascript
+var express = require('express');
+    var multer = require('multer');
+    var azureStorage = require('azure-storage');
+    var streamifier = require('streamifier');
+    var request = require('request');
+
+    var portNum = process.env.PORT || 9898;
+
+    var app = express();
+    var storage = multer.memoryStorage();
+    var uploadImage = multer({ storage: storage }).single('imageFile');
+
+    app.post('/api/image-upload', configurationMiddleware, uploadImage, imageHandlerMiddleware);
+    app.get('/api/images', configurationMiddleware, noCacheMiddleware, listBlobsMiddleware);
+    app.use('/', express.static('src'));
+    app.use(errorHandlerMiddleware);
+
+    app.listen(portNum, function() {
+        console.log("Web application listening on port " + portNum);
+    });
+
+    function configurationMiddleware(req, res, next) {
+
+        var verifyConfigValue = function(keyName) {
+            var configValue = process.env[keyName];
+            if(!configValue) {
+                throw new Error(keyName + " not defined.");
+            }
+            return configValue;
+        };
+
+        req.appConfig = {
+            storageAccount: verifyConfigValue("AZURE_STORAGE_ACCOUNT"),
+            storageAccountAccessKey: verifyConfigValue("AZURE_STORAGE_ACCESS_KEY"),
+            visionApiKey: verifyConfigValue("AZURE_VISION_API_KEY")
+        };
+        next();
+    }
+
+    function imageHandlerMiddleware(req, res) {
+
+        // Note, all of this work is done in memory!!
+
+        var cfg = req.appConfig;
+        var uploadFile = req.file;
+        var blobService = azureStorage.createBlobService(cfg.storageAccount, cfg.storageAccountAccessKey);
+        var publicUrl = [
+            "https://",
+            cfg.storageAccount,
+            ".blob.core.windows.net/photos/",
+            uploadFile.originalname
+        ].join('');
+
+        console.log(["Received ", uploadFile.originalname, " (", uploadFile.size, " bytes)"].join(''));
+        saveImageToAzure(uploadFile);
+
+        function saveImageToAzure() {
+            blobService.createBlockBlobFromStream(
+                'photos',
+                uploadFile.originalname,
+                streamifier.createReadStream(uploadFile.buffer),
+                uploadFile.size,
+                function(err, result, response) {
+                    if(err){
+                        throw err;
+                    }
+                    console.log(["Uploaded ", uploadFile.originalname, " image to 'photos' container on Azure."].join(''));
+                    console.log(["URL: ", publicUrl].join(''));
+                    createThumbnailOfImage();
+                });
+        }
+
+    function createThumbnailOfImage(){
+        var options = {
+            url: "https://api.projectoxford.ai/vision/v1.0/generateThumbnail",
+            qs: {
+                width: 192,
+                height: 128,
+                smartCropping: true
+            },
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Ocp-Apim-Subscription-Key': cfg.visionApiKey
+            },
+            json: true,
+            body: {
+                url: publicUrl
+            }
+        };
+        request(options)
+            .on('error', function(err) {
+                throw err;
+            })
+            .on('end', function() {
+                console.log(["Created ", uploadFile.originalname, " thumbnail."].join(''));
+            })
+            .pipe(saveThumbnailToAzure());
+        }
+
+        function saveThumbnailToAzure() {
+            return blobService
+                .createWriteStreamToBlockBlob('thumbnails', uploadFile.originalname)
+                .on('error', function(err) {
+                    throw err;
+                })
+                .on('end', function() {
+                    console.log(["Uploaded ", uploadFile.originalname, " image to 'thumbnails' container on Azure."].join(''));
+                    analyzeImage();
+                });
+        }
+
+        function analyzeImage() {
+            var options = {
+                url: "https://api.projectoxford.ai/vision/v1.0/analyze",
+                qs: {
+                    visualFeatures: "Description"
+                },
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Ocp-Apim-Subscription-Key': cfg.visionApiKey
+                },
+                json: true,
+                body: {
+                    url: publicUrl
+                }
+            };
+            request(options, function(err, response, body) {
+                if(err) {
+                    throw err;
+                }
+                console.log(["Analyzed ", uploadFile.originalname].join(''));
+                saveAnalysisResults(body);
+            });
+        }
+
+        function saveAnalysisResults(result) {
+            var metaData = {
+                caption: result.description && result.description.captions && result.description.captions.length ?
+                    result.description.captions[0].text :
+                    "Unknown",
+                tags: result.description && result.description.tags && result.description.tags.length ?
+                    JSON.stringify(result.description.tags) :
+                    []
+            };
+
+            blobService.setBlobMetadata(
+                'photos',
+                uploadFile.originalname,
+                metaData,
+                function(err, result, response) {
+                    if(err){
+                        throw err;
+                    }
+                    console.log(["Stored ", uploadFile.originalname, " analysis results to Azure."].join(''));
+                    res.status(200).send({
+                        name: uploadFile.originalname,
+                        mimetype: uploadFile.mimetype,
+                        result: result
+                    });
+                });
+        }
+    }
+
+    function listBlobsMiddleware(req, res) {
+        var cfg = req.appConfig;
+        var blobService = azureStorage.createBlobService(cfg.storageAccount, cfg.storageAccountAccessKey);
+        var options = {
+            maxResults: 5000,
+            include: "metadata",
+
+        };
+        blobService.listBlobsSegmented(
+            'photos',
+            null,
+            options,
+            function(err, result, response) {
+                if(err) {
+                    throw err;
+                }
+                (result.entries || []).forEach(function(entry) {
+                    entry.url = [
+                        "https://",
+                        cfg.storageAccount,
+                        ".blob.core.windows.net/thumbnails/",
+                        entry.name
+                    ].join("");
+                    entry.fullUrl = [
+                        "https://",
+                        cfg.storageAccount,
+                        ".blob.core.windows.net/photos/",
+                        entry.name
+                    ].join("");
+                    entry.metadata = entry.metadata || {};
+                });
+                res.status(200).json(result);
+            }
+        )
+    }
+
+    function noCacheMiddleware(req, res, next) {
+        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+        res.header('Expires', '-1');
+        res.header('Pragma', 'no-cache');
+        next();
+    }
+
+    function errorHandlerMiddleware(err, req, res, next) {
+        console.error(err);
+        res.status(500).send({
+            error: true,
+            message: err.toString()
+        });
+    }
+	```
+	
+	> Add description
+
+1. Place the mouse cursor over "INTELLIPIX" in Visual Studio Code's Explorer window and click the **New Folder** button that appears. Name the new folder "src" (without quotation marks).
+
+    ![Adding a folder](images/node-add-folder.png)
+
+    _Adding a folder_
+
+1. Add a file named index.html to the src folder and insert the following statements:
+
+	```html
+<!DOCTYPE html>
+    <html lang="en" ng-app="myApp">
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Intellipix</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .ng-cloak { display: none !important; }
+        a img {
+        cursor: pointer;
+        }
+        .image-modal img {
+        width: 100%;
+        }
+    </style>
+    </head>
+    <body class="ng-cloak">
+
+    <div class="container body-content" ng-controller="mainCtrl as ctrl">
+
+        <h1>Intellipix</h1>
+
+        <!-- Panel containing image-upload and search controls -->
+        <div class="well">
+        <form ng-if="!ctrl.analysis.inProgress">
+            <div class="row">
+            <div class="col-md-7">
+                <div class="form-group">
+                <label for="imageFile">Select Image to Analyze:</label>
+                <input type="file" id="imageFile" name="imageFile" on-file-selected="ctrl.imageFileSelected(file)">
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-group">
+                <label for="searchText">Search:</label>
+                <div class="input-group">
+                    <input type="text" id="searchText" ng-model="ctrl.searchText" class="form-control">
+                    <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="ctrl.clearSearchText()">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+                    </span>
+                </div>
+                </div>
+            </div>
+            </div>
+        </form>
+        <p ng-if="ctrl.analysis.inProgress">
+            <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+            Analyzing Image ...
+        </p>
+        </div>
+
+        <!-- Panel showing error message if upload or image analysis fails -->
+        <div class="alert alert-danger alert-dismissible" role="alert" ng-if="ctrl.analysis.error">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        {{ctrl.analysis.error.message}}
+        </div>
+
+        <!-- Thumbnail images -->
+        <div class="row">
+        <div class="col-sm-12">
+            <a ng-click="ctrl.showImageDetails(img)" ng-repeat="img in ctrl.images | filter:ctrl.imageFilter">
+                <img ng-src="{{img.url}}" width="192" ng-attr-title={{img.metadata.caption}} style="padding-right: 16px; padding-bottom: 16px">
+            </a>
+        </div>
+        </div>
+
+        <!-- Modal window used to show enlarged images -->
+        <div class="modal fade image-modal" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{ctrl.current.metadata.caption}}</h4>
+            </div>
+            <div class="modal-body">
+                <img ng-src="{{ctrl.current.fullUrl}}">
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script src="index.js"></script>
+
+    </body>
+    </html>
+	```
+
+	> Add description
+
+1. Add a file named index.js to the src folder and insert the following statements:
+
+	```javascript
+(function() {
+
+        function mainController($http) {
+            this.$http = $http;
+            this.analysis = {
+                inProgress: false
+            };
+            this.images = [];
+            this.current = null;
+            this.searchText = '';
+            this.imageFilter = imageFilter.bind(this);
+            this.loadImageList();
+
+            function imageFilter(img) {
+                var search = this.searchText;
+                var tags = img && img.metadata && img.metadata.tags;
+
+                if(!search || !tags) {
+                    return true;
+                }
+
+                if (containsText(tags, search)) {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+        mainController.prototype = {
+
+            clearSearchText: function() {
+                this.searchText = '';
+            },
+
+            imageFileSelected: function(file) {
+                var ctrl = this, formData;
+                ctrl.analysis = {
+                    inProgress: true
+                };
+                formData = new FormData();
+                formData.append('imageFile', file);
+                ctrl.$http
+                    .post('/api/image-upload', formData, {
+                        transformRequest: angular.identity,
+                        headers: {
+                            'Content-Type': undefined
+                        }
+                    })
+                    .then(function(result) {
+                        ctrl.analysis = {
+                            inProgress: false,
+                            result: result.data
+                        };
+                        ctrl.loadImageList();
+                    })
+                    .catch(function(err) {
+                        ctrl.analysis = {
+                            inProgress: false,
+                            error: err.data || { message: err.statusText }
+                        };
+                    });
+            },
+
+            loadImageList: function() {
+                var ctrl = this;
+                ctrl.$http.get('/api/images')
+                    .then(function(result) {
+                        ctrl.images = result.data.entries || [];
+                    })
+                    .catch(function(err) {
+                        alert((err.data && err.data.message) || err.toString());
+                    });
+            },
+
+            showImageDetails: function(img) {
+                this.current = img;
+                angular.element("#imageModal").modal();
+            }
+        };
+
+        function fileContentBinderDirective() {
+            return {
+                restrict: 'A',
+                scope: {
+                    onFileSelected: '&'
+                },
+                link: function(scope, element) {
+                    element.on('change', function() {
+                        scope.$apply(function() {
+                            scope.onFileSelected({
+                                file: element[0].files[0]
+                            });
+                        });
+                    });
+                }
+            };
+        }
+
+        function containsText(text, search) {
+            return (text && search) ? (text.toLowerCase().indexOf(search.toLowerCase()) > -1) : false;
+        }
+
+        angular
+            .module('myApp', [])
+            .controller('mainCtrl', ['$http', mainController])
+            .directive('onFileSelected', [fileContentBinderDirective]);
+
+    }());
+	```
+
+	> Add description
+
+With the code in place, the next task is to run it and test it in your browser.
+
+<a name="Exercise5"></a>
+## Exercise 5: Test the app in your browser
+
+Now it's time to test the app.
+
+1. Return to the Command Prompt window and, once more, make sure you're in the Intellipix directory that you created for the project. Then execute the following command to start server.js:
+
+	<pre>
+	node server.js
+	</pre>
+
+1. Open your browser and navigate to [http://localhost:9898/](http://localhost:9898/).
+
+1. Click the **Browse** button and upload one of the images found in the "resources/photos" folder of this lab. After a few seconds, a thumbnail version of the photo appears on the page:
+
+    ![Intellipix with one photo uploaded](Images/node-one-photo-uploaded.png)
+
+    _Intellipix with one photo uploaded_
+
+1. Upload a few more images from this lab's "resources/photos" folder. Confirm that they appear on the page, too:
+
+    ![Intellipix with three photos uploaded](Images/node-three-photos-uploaded.png)
+
+    _Intellipix with three photos uploaded_
+
+1. Hover the cursor over one of the image thumbnails. Confirm that a tooltip window appears containing a caption for the image. *This is the caption that was generated by the Computer Vision API and stored in blob metadata*.
+
+    ![The computer-generated caption](Images/node-thumbnail-with-tooltip.png)
 
     _The computer-generated caption_
 
-1. Click one of the thumbnails to display the original image in a lightbox. Confirm that the computer-generated caption appears at the bottom of the lightbox. Then dismiss the lightbox.
+1. Click the thumbnail to display the original image in a lightbox. Confirm that the computer-generated caption appears at the top of the lightbox. Then dismiss the lightbox.
 
-    ![Lightbox with computer-generated caption](Images/lightbox-with-caption.png)
+    ![Lightbox with computer-generated caption](Images/node-lightbox-with-caption.png)
 
     _Lightbox with computer-generated caption_
 
-1. Want to see where the metadata generated by the Computer Vision API is being stored? Use the Azure Storage Explorer to open the "photos" container. Right-click any of the blobs in the container and select **Properties**. In the ensuing dialog, you'll see a list of the metadata attached to the blob. Each metadata item is a key-value pair. The computer-generated image description is stored in the item named "caption," while the metadata items named "tag0," "tag1," and so on hold the additional keywords created for the image.
+1. Upload several more photos. **Feel free to upload photos of your own**, not just the ones provided with the lab.
 
-    ![Blob metadata](Images/blob-metadata.png)
+    ![Intellipix after uploading several images](Images/node-several-images-uploaded.png)
+
+    _Intellipix after uploading several images_
+
+1. Type a keyword such as "river" into the search box. Search results will vary depending on what you typed and what images you uploaded. But the result should be a filtered list of images — images whose metadata keywords include all or part of the keyword that you typed.
+
+    ![Performing a search](Images/node-search-results.png)
+
+    _Performing a search_
+
+1. Return to the Microsoft Azure Storage Explorer (or restart if it you didn't leave it running) and double-click the "photos" container under the storage account you created in Exercise 1. The number of blobs in the container should equal the number of photos you uploaded. Double-click one of the blobs to download it and see the image stored in the blob.
+
+    ![Contents of the "photos" container](Images/photos-container.png)
+
+    _Contents of the "photos" container_
+
+1. Open the "thumbnails" container in Storage Explorer. How many blobs do you see there? Open one of the blobs to see what's inside. These are the thumbnail images generated from the image uploads.
+
+1. Want to see where the metadata generated by the Computer Vision API is being stored? Use the Azure Storage Explorer to open the "photos" container. Right-click any of the blobs in the container and select **Properties**. In the ensuing dialog, you'll see a list of the metadata attached to the blob. Each metadata item is a key-value pair. The computer-generated caption is stored in the item named "caption," while the keywords generated from the image are stored in a serialized JSON array of strings named "tags."
+
+    ![Blob metadata](Images/node-blob-metadata.png)
 
     _Blob metadata_
 
 	When you're finished, click **Cancel** to close the Properties dialog.
 
-In the next exercise, you'll put the extra keywords to work by adding a search feature to the app.
+1. Do a **View Source** in your browser to view the source for the page. Find the \<img\> elements representing the image thumbnails. Observe that the URLs assigned to the images refer **directly to blobs in blob storage**. This is possible because you set the containers' **Access type** to **Blob**, which makes the blobs inside them publicly accessible.
 
-<a name="Exercise6"></a>
-## Exercise 6: Add search to the app
-
-In this exercise, you will add a search box to the home page enabling users to do keyword searches on the images that they have uploaded. The keywords are the ones generated by the Computer Vision API and stored in blob metadata.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. tk.
-
-1. Launch the application again and upload several photos. **Feel free to upload photos of your own**, not just the ones provided with the lab.
-
-1. Type a keyword such as "river" into the search box. Then click the **Search** button.
-
-    ![Performing a search](Images/enter-search-term.png)
-
-    _Performing a search_
-
-1. Search results will vary depending on what you typed and what images you uploaded. But the result should be a list of matching images:
-
-    ![Search results](Images/search-results.png)
-
-    _Search results_
-
-1. Click the browser's back button to display all of the images again.
+	> What would happen if the containers were private? If you're not sure, try it and see. Temporaily change the "thumbnails" container's **Access type** to **Private** in the Azure Portal. Then refresh the Intellipix page in your browser and see what happens.
 
 You're almost finished, but the final and most important step remains. It is time to deploy the app to the cloud.
 
-<a name="Exercise7"></a>
-## Exercise 7: Deploy the app to Azure
+<a name="Exercise6"></a>
+## Exercise 6: Deploy the app to Azure
 
 In this exercise, you will create an Azure Web App and deploy Intellipix to it using Git. Up to now, you have been running the app locally. Azure Web Apps support local Git repositories as deployment sources, which makes it incredibly easy to [publish the contents of local repositories to Azure](https://azure.microsoft.com/en-us/documentation/articles/web-sites-publish-source-control/). You already have the local repository; it was created in Exercise 3. Now it's just a matter of creating the Web App, providing a few key pieces of information such as application settings and deployment credentials, and executing a **git push** command.
 
