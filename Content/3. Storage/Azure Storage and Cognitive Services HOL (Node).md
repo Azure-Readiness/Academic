@@ -10,7 +10,7 @@ Microsoft Azure Storage is a set of services that allows you to store large volu
 
 Data stored in Microsoft Azure Storage can be accessed over HTTP or HTTPS using straightforward REST APIs, or it can be accessed using rich client libraries available for many popular languages and platforms, including .NET, Java, Android, Node.js, PHP, Ruby, and Python. The [Azure Portal](https://portal.azure.com) includes features for working with Azure Storage, but richer functionality is available from third-party tools, many of which are free and some of which work cross-platform.
 
-In this lab, you will write an app that accepts images uploaded by users and stores the images in Azure blob storage. You will learn how to read and write blobs in Node.js, and how to use blob metadata to attach additional information to the blobs you create. You will also get first-hand experience using [Microsoft Cognitive Services](https://www.microsoft.com/cognitive-services/), a set of intelligent APIs for building equally intelligent applications. Specifically, you'll submit each image uploaded by the user to Cognitive Services' [Computer Vision API](https://www.microsoft.com/cognitive-services/en-us/computer-vision-api) to generate a caption for the image as well as searchable metadata describing the contents of the image. Along the way, you'll discover how easy it is to deploy apps to the cloud using Git and Visual Studio Code.
+In this lab, you will write a Node.js app that accepts images uploaded by users and stores the images in Azure blob storage. You will learn how to read and write blobs in Node.js, and how to use blob metadata to attach additional information to the blobs you create. You will also get first-hand experience using [Microsoft Cognitive Services](https://www.microsoft.com/cognitive-services/), a set of intelligent APIs for building equally intelligent applications. Specifically, you'll submit each image uploaded by the user to Cognitive Services' [Computer Vision API](https://www.microsoft.com/cognitive-services/en-us/computer-vision-api) to generate a caption for the image as well as searchable metadata describing the contents of the image, and to generate an image thumbnail. And at the end, you'll discover how easy it is to deploy apps to the cloud using Git and Visual Studio Code.
 
 <a name="Objectives"></a>
 ### Objectives ###
@@ -166,7 +166,7 @@ The containers are currently empty, but that will change once your app is deploy
 
 [Microsoft Cognitive Services](https://www.microsoft.com/cognitive-services/) is a set of intelligence APIs that you can call from your apps. Among the more than 20 APIs it offers are the [Computer Vision API](https://www.microsoft.com/cognitive-services/en-us/computer-vision-api) for distilling actionable information from images, the [Emotion API](https://www.microsoft.com/cognitive-services/en-us/emotion-api) for recognizing emotion in images and video, and the [Text Analytics API](https://www.microsoft.com/cognitive-services/en-us/text-analytics-api) for extracting sentiments and other information from text (for example, Twitter feeds). These APIs make it possible to build smart apps that would have been impossible just a few short years ago. And they're available in preview form for you to begin using today.
 
-In this exercise, you will acquire a subscription key allowing you to call the Computer Vision API from your code. You'll use this key in Exercise 4 to generate thumbnails from the images uploaded to the Web site, and also to generate captions and searchable metadata for the images.
+In this exercise, you will acquire a subscription key allowing you to call the Computer Vision API from your code. You'll use this key in Exercise 4 to generate thumbnails from the images uploaded to the Web site, and to generate captions and search keywords for the images.
 
 1. In order to use the Computer Vision API, you need to sign up for a free account and acquire a subscription key. To do that, point your browser to [https://www.microsoft.com/cognitive-services/en-us/subscriptions](https://www.microsoft.com/cognitive-services/en-us/subscriptions).
 
@@ -199,7 +199,7 @@ In this exercise, you will acquire a subscription key allowing you to call the C
 <a name="Exercise4"></a>
 ## Exercise 4: Write the app in Visual Studio Code
 
-In this exercise, you will create a new Node.js app in Visual Studio Code and add code to upload images, write them to blob storage, display them in a Web page, generate captions and keywords using the Computer Vision API, and perform keyword searches on uploaded images. The app will be named Intellipix (for "Intelligent Pictures") and will be accessed through your browser. 
+In this exercise, you will create a new Web app in Visual Studio Code and add code to upload images, write them to blob storage, display them in a Web page, generate thumbnails, captions, and keywords using the Computer Vision API, and perform keyword searches on uploaded images. The app will be named Intellipix (for "Intelligent Pictures") and will be accessed through your browser. The server-side code will be written in JavaScript and Node.js. The code that runs in the browser will be written in JavaScript and will leverage two of the most popular class libraries on the planet: [AngularJS](https://angularjs.org/) and [Bootstrap](http://getbootstrap.com/). 
 
 1. Create a project directory named "Intellipix" for the lab in the location of your choice — for example, "C:\DXLabs\Intellipix."
 
@@ -233,6 +233,8 @@ In this exercise, you will create a new Node.js app in Visual Studio Code and ad
 	set AZURE_STORAGE_ACCESS_KEY=<i>storage_account_key</i>
 	</pre>
 
+	> Storing these sensitive values in environment variables prevents you from having to embed them in your code, where a determined intruder could find them and use them. When you deploy the app to the cloud, these values will be stored in Azure and never exposed to the end user or transmitted over the wire.
+
 1. In the Command Prompt window, **navigate to the Intellipix directory you created in Step 1** and execute the following command (note the space and the period at the end of the command) to start Visual Studio Code in that directory:
 
 	<pre>
@@ -251,7 +253,7 @@ In this exercise, you will create a new Node.js app in Visual Studio Code and ad
 
     _Initializing a Git repository_
 
-1. Return to the Command Prompt window and make sure you're still in the directory that you created for the project (the directory that was just placed under source control). Then execute the following command to initialize the project. When prompted for an author name, enter your name.
+1. Return to the Command Prompt window and make sure you're still in the "Intellipix" directory that you created for the project (the directory that was just placed under source control). Then execute the following command to initialize the project. When prompted for an author name, enter your name.
 
 	<pre>
 	npm init -y
@@ -262,6 +264,8 @@ In this exercise, you will create a new Node.js app in Visual Studio Code and ad
 	<pre>
     npm install -save azure-storage express multer request streamifier
 	</pre> 
+
+	> [azure-storage](https://www.npmjs.com/package/azure-storage) is Microsoft's Azure Storage Client Library for Node.js. It provides convenient JavaScript APIs for accessing blob storage, table storage, and more.
 
 1. Return to Visual Studio Code and click the **Explorer** button in the upper-left corner. Then click **package.json** to open that file for editing.
 
@@ -518,7 +522,7 @@ var express = require('express');
 
     _Adding a folder_
 
-1. Add a file named index.html to the src folder and insert the following statements:
+1. Add a file named index.html to the "src" folder and insert the following statements:
 
 	```html
 <!DOCTYPE html>
@@ -532,9 +536,9 @@ var express = require('express');
     <style>
         .ng-cloak { display: none !important; }
         a img {
-        cursor: pointer;
+        	cursor: pointer;
         }
-        .image-modal img {
+        	.image-modal img {
         width: 100%;
         }
     </style>
@@ -619,7 +623,7 @@ var express = require('express');
 
 	> Add description
 
-1. Add a file named index.js to the src folder and insert the following statements:
+1. Add a file named index.js to the "src" folder and insert the following statements:
 
 	```javascript
 (function() {
@@ -643,7 +647,7 @@ var express = require('express');
                     return true;
                 }
 
-                if (containsText(tags, search)) {
+                if(containsText(tags, search)) {
                     return true;
                 }
 
@@ -734,14 +738,22 @@ var express = require('express');
 
 	> Add description
 
-With the code in place, the next task is to run it and test it in your browser.
+1. Use Visual Studio Code's **File -> Save All** command to save all of your changes.
+
+1. Click the **Git** button in the ribbon on the left. Type "First commit" (without quotation marks) into the message box, and then click the **Commit All** button (the check mark) to commit all changes to the local Git repository. 
+
+    ![Committing changes to the project](Images/node-commit-changes.png)
+
+    _Committing changes to the project_
+
+With the code that comprises the app in place and key environment variables initialized with "secrets" such as your storage account key, the next task is to run the app and test it in your browser.
 
 <a name="Exercise5"></a>
 ## Exercise 5: Test the app in your browser
 
-Now it's time to test the app.
+In this exercise, you will run the app locally in order to test it and familiarize yourself with its features. Running it locally is a simple matter of firing up a Node.js server process to host your server components (in this case, server.js) and pointing your browser to http://localhost:*port*, where *port* is the port number on which the server process is listening for HTTP requests. Server.js listens on port 9898. You can modify that if you would like by changing line 7 in the code.
 
-1. Return to the Command Prompt window and, once more, make sure you're in the Intellipix directory that you created for the project. Then execute the following command to start server.js:
+1. Return to the Command Prompt window and, once more, make sure you're in the "Intellipix" directory that you created for the project. Then execute the following command to start server.js:
 
 	<pre>
 	node server.js
@@ -749,13 +761,13 @@ Now it's time to test the app.
 
 1. Open your browser and navigate to [http://localhost:9898/](http://localhost:9898/).
 
-1. Click the **Browse** button and upload one of the images found in the "resources/photos" folder of this lab. After a few seconds, a thumbnail version of the photo appears on the page:
+1. Click the **Browse** button and upload one of the images found in the "resources/photos" directory of this lab. After a few seconds, a thumbnail version of the photo appears on the page:
 
     ![Intellipix with one photo uploaded](Images/node-one-photo-uploaded.png)
 
     _Intellipix with one photo uploaded_
 
-1. Upload a few more images from this lab's "resources/photos" folder. Confirm that they appear on the page, too:
+1. Upload a few more images from this lab's "resources/photos" directory. Confirm that they appear on the page, too:
 
     ![Intellipix with three photos uploaded](Images/node-three-photos-uploaded.png)
 
@@ -767,7 +779,7 @@ Now it's time to test the app.
 
     _The computer-generated caption_
 
-1. Click the thumbnail to display the original image in a lightbox. Confirm that the computer-generated caption appears at the top of the lightbox. Then dismiss the lightbox.
+1. Click the thumbnail to display an enlarged version of the image in a lightbox. Confirm that the computer-generated caption appears at the top of the lightbox. Then dismiss the lightbox.
 
     ![Lightbox with computer-generated caption](Images/node-lightbox-with-caption.png)
 
@@ -779,7 +791,7 @@ Now it's time to test the app.
 
     _Intellipix after uploading several images_
 
-1. Type a keyword such as "river" into the search box. Search results will vary depending on what you typed and what images you uploaded. But the result should be a filtered list of images — images whose metadata keywords include all or part of the keyword that you typed.
+1. Type a keyword describing something you see in the images — for example, "river" — into the search box. Search results will vary depending on what you typed and what images you uploaded. But the result should be a filtered list of images — images whose metadata keywords include all or part of the keyword that you typed.
 
     ![Performing a search](Images/node-search-results.png)
 
@@ -787,13 +799,13 @@ Now it's time to test the app.
 
 1. Return to the Microsoft Azure Storage Explorer (or restart if it you didn't leave it running) and double-click the "photos" container under the storage account you created in Exercise 1. The number of blobs in the container should equal the number of photos you uploaded. Double-click one of the blobs to download it and see the image stored in the blob.
 
-    ![Contents of the "photos" container](Images/photos-container.png)
+    ![Contents of the "photos" container](Images/node-photos-container.png)
 
     _Contents of the "photos" container_
 
 1. Open the "thumbnails" container in Storage Explorer. How many blobs do you see there? Open one of the blobs to see what's inside. These are the thumbnail images generated from the image uploads.
 
-1. Want to see where the metadata generated by the Computer Vision API is being stored? Use the Azure Storage Explorer to open the "photos" container. Right-click any of the blobs in the container and select **Properties**. In the ensuing dialog, you'll see a list of the metadata attached to the blob. Each metadata item is a key-value pair. The computer-generated caption is stored in the item named "caption," while the keywords generated from the image are stored in a serialized JSON array of strings named "tags."
+1. Want to see where the metadata generated by the Computer Vision API is being stored? Open the "photos" container again. Right-click any of the blobs in the container and select **Properties**. In the ensuing dialog, you'll see a list of the metadata attached to the blob. Each metadata item is a key-value pair. The computer-generated caption is stored in the item named "caption," while the keywords generated from the image are stored in a JSON string array named "tags."
 
     ![Blob metadata](Images/node-blob-metadata.png)
 
@@ -810,29 +822,151 @@ You're almost finished, but the final and most important step remains. It is tim
 <a name="Exercise6"></a>
 ## Exercise 6: Deploy the app to Azure
 
-In this exercise, you will create an Azure Web App and deploy Intellipix to it using Git. Up to now, you have been running the app locally. Azure Web Apps support local Git repositories as deployment sources, which makes it incredibly easy to [publish the contents of local repositories to Azure](https://azure.microsoft.com/en-us/documentation/articles/web-sites-publish-source-control/). You already have the local repository; it was created in Exercise 3. Now it's just a matter of creating the Web App, providing a few key pieces of information such as application settings and deployment credentials, and executing a **git push** command.
+In this exercise, you will create an Azure Web App and deploy Intellipix to it using Git. Up to now, you have been running the app locally. Azure Web Apps support local Git repositories as deployment sources, which makes it incredibly easy to [publish the contents of local Git repositories to Azure](https://azure.microsoft.com/en-us/documentation/articles/web-sites-publish-source-control/). You already have the local repository; it was created in Exercise 4. Now it's just a matter of creating the Web App, providing a few key pieces of information to it, and executing a **git push** command.
 
-1. tk.
+1. If you have made any changes to the app since committing it at the end of Exercise 4, use Visual Studio Code to commit those changes now.
 
-1. tk.
+1. Open the [Azure Portal](https://portal.azure.com) in your browser.
 
-1. tk.
+1. Click **+ New**, followed by **Web + Mobile** and **Web App**..
 
-1. tk.
+    ![Creating a new Azure Web App](Images/node-new-web-app.png)
 
-1. tk.
+    _Creating a new Azure Web App_
 
-1. tk.
+1. In the "Web App" blade, enter a name for the Azure Web App. The name must be unique within Azure since it ultimately becomes part of a DNS name, so you will probably have to use something other than "Intellipix." Also make sure **Create new** is selected under **Resource Group** and enter a resource-group name such as "Intellipix." This name only has to be unique to a subscription. Then click **App service plan/Location**.
 
-1. tk.
+    ![Naming the Azure Web App](Images/node-web-app-parameters.png)
 
-1. tk.
+    _Naming the Azure Web App_
 
-1. tk.
+1. In the "App Service plan" blade, click **Create New**.
 
-1. tk.
+    ![Creating an App Service plan](Images/node-new-app-service-plan.png)
 
-If you make changes to the app and want to push the changes out to the Web, simply execute a **git push** again. Of course, you can still test your changes locally before publishing to the Web.
+    _Creating an App Service plan_
+
+1. Type "IntellipixServicePlan" (without quotation marks) into the **App Service plan** box and select the location nearest you under **Location**. Then click **Pricing tier** to select a pricing tier.
+
+    ![Configuring an App Service plan](Images/node-configure-app-service-plan.png)
+
+    _Configuring an App Service plan_
+
+1. In the "Choose your pricing tier" blade, click **View All** to show all pricing tiers.
+
+    ![Viewing all pricing tiers](Images/node-view-all-pricing-tiers.png)
+
+    _Viewing all pricing tiers_
+
+1. Scroll down and select the **F1 Free** pricing tier. Then click the **Select** button.
+
+    ![Selecting the free pricing tier](Images/node-select-free-tier.png)
+
+    _Selecting the free pricing tier_
+
+1. Click the **OK** button at the bottom of the "App Service plan" blade to OK the service plan.
+
+    ![OKing the App Service plan](Images/node-ok-app-service-plan.png)
+
+    _OKing the App Service plan_
+
+1. Click the **Create** button at the bottom of the "Web App" blade to create the Azure Web App.
+
+    ![Creating the Azure Web App](Images/node-create-web-app.png)
+
+    _Creating the Azure Web App_
+
+1. Once the app has deployed (it generally only takes a few seconds), click **Resource groups** in the ribbon on the left side of the portal, and click the resource group whose name you specified when creating the Web App. Then click the Azure Web App in that resource group (the Web App that you just created).
+
+    ![Selecting the Azure Web App](Images/node-select-azure-web-app.png)
+
+    _Selecting the Azure Web App_
+
+1. In the "Settings" blade, click **Application settings** to view the Web App's application settings.
+
+    ![Viewing the Web App's application settings](Images/node-select-app-settings.png)
+
+    _Viewing the Web App's application settings_
+
+1. Scroll down to the "App settings" section of the blade and add the following key-value pairs:
+
+	- AZURE_STORAGE_ACCOUNT – Name of the storage account you created in Exercise 1
+	- AZURE_STORAGE_ACCESS_KEY – Access key for the storage account
+	- AZURE_VISION_API_KEY – Subscription key for the Computer Vision API you obtained in Exercise 3
+
+	Once the settings are entered, click the **Save** button at the top of the blade to save them.
+
+    ![Specifying application settings](Images/node-app-settings.png)
+
+    _Specifying application settings_
+
+1. Close the "Application settings" blade and scroll down to the "PUBLISHING" section of the "Settings" blade. Then click **Deployment source**.
+
+    ![Selecting the deployment source](Images/node-select-deployment-source.png)
+
+    _Selecting the deployment source_
+
+1. In the "Deployment source" blade, click **Choose Source**.
+
+    ![Choosing the deployment source](Images/node-choose-source.png)
+
+    _Choosing the deployment source_
+
+1. In the "Choose source" blade, click **Local Git Repository**. Then click **OK** at the bottom of the "Deployment source" blade.
+
+    ![tk](Images/node-select-local-git-repository.png)
+
+    _tk_
+
+1. Go back to the "PUBLISHING" section of the "Settings" blade and click **Deployment credentials**.
+
+    ![Selecting the deployment credentials](Images/node-select-deployment-credentials.png)
+
+    _Selecting the deployment credentials_
+
+1. Enter a user name and password for deploying to Azure. User names may contain letters, numbers, hyphens, and underscores and must start with a letter. Make your password at least 8 characters in length and include a mix of uppercase letters, lowercase letters, and numbers. **Remember the user name and password you entered because you will need them when you deploy the app**. When you're done, click the **Save** button at the top of the blade.
+
+    ![Setting the deployment credentials](Images/node-set-deployment-credentials.png)
+
+    _Setting the deployment credentials_
+
+1. Scroll to the "GENERAL" section of the "Settings" blade and click **Properties**.
+
+    ![Selecting properties](Images/node-select-properties.png)
+
+    _Selecting properties_
+
+1. Scroll down in the "Properties" blade until you find "GIT URL." Then click the **Copy** button to copy the URL to the clipboard.
+
+    ![Copying the Git URL](Images/node-copy-git-url.png)
+
+    _Copying the Git URL_
+
+1. Rteurn to the Command Prompt window (or open a new one if you closed the last one) and execute the following command to add "azure" as a remote name. Substitute the Git URL on the clipboard for *git_url*.
+
+	<pre>
+	git remote add azure <i>git_url</i>
+	</pre>
+
+1. Now use the following command to deploy Intellipix from your local Git repository to Azure. When prompted to enter Git credentials, type the user name and password you specified in Step 18 of this exercise.
+
+	<pre>
+	git push azure master
+	</pre>
+
+1. After a few moments, you should be greeted with a successful deployment.
+
+    ![Success!](Images/node-successful-deployment.png)
+
+    _Success!_
+
+1. Open your browser and navigate to *appname*.azurewebsites.net, substituting the name of your Azure Web App for *appname* (the name you entered in Step 4 of this exercise). Confirm that Intellipix appears in your browser, and that it shows the images you uploaded to it while testing locally. The app is no longer running locally; it's on the Web, where it's reachable by everyone. Congratulations on a successful deployment!
+
+    ![The finished product!](Images/node-intellipix.png)
+
+    _The finished product!_
+
+If you make changes to the app and want to push the changes out to the Web, simply commit the changes in Visual Studio Code and execute a **git push azure master** command again. Of course, you can still test your changes locally before publishing to the Web.
 
 ## Summary
 
@@ -840,10 +974,10 @@ In this hands-on lab, you learned how to:
 
 - Create an Azure storage account and use it as a backing store for an app
 - Write a Node.js app in Visual Studio Code and test it locally
-- Use Git to deploy a Node.js app stored in a local repository to Azure
 - Write code that uploads blobs to blob storage and attaches metadata to them
 - Consume blob metadata to implement search
-- Use Microsoft's Computer Vision API to generate metadata from images
+- Use Microsoft's Computer Vision API to generate image metadata and thumbnails
+- Use Git to deploy a Node.js app stored in a local repository to Azure
 
 There is much more that you could do to develop Intellipix and to leverage Azure even further. For example, you could add support for authenticating users and deleting photos, and rather than force the user to wait for Cognitive Services to process a photo following an upload, you could use [Azure Functions](https://azure.microsoft.com/en-us/services/functions/) to call the Computer Vision API asynchronously each time an image is added to blob storage. You could even use Cognitive Services to detect faces in the photos and analyze the emotions depicted by those faces. With the cloud as your platform, the sky is the limit (pun intended).
 

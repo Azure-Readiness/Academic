@@ -1,4 +1,3 @@
-
 var express = require('express');
 var multer = require('multer');
 var azureStorage = require('azure-storage');
@@ -71,38 +70,32 @@ function imageHandlerMiddleware(req, res) {
             });
     }
 
-    function createThumbnailOfImage(){
-        var options = {
-            url: "https://api.projectoxford.ai/vision/v1.0/generateThumbnail",
-            qs: {
-                width: 192,
-                height: 128,
-                smartCropping: true
-            },
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Ocp-Apim-Subscription-Key': cfg.visionApiKey
-            },
-            json: true,
-            body: {
-                url: publicUrl
-            }
-            // // To upload the image directly, rather than referencing the Azure blob URL.
-            // headers: {
-            //     'Content-Type': 'application/octet-stream',
-            //     'Ocp-Apim-Subscription-Key': cfg.visionApiKey
-            // },
-            // body: uploadFile.buffer
-        };
-        request(options)
-            .on('error', function(err) {
-                throw err;
-            })
-            .on('end', function() {
-                console.log(["Created ", uploadFile.originalname, " thumbnail."].join(''));
-            })
-            .pipe(saveThumbnailToAzure());
+function createThumbnailOfImage(){
+    var options = {
+        url: "https://api.projectoxford.ai/vision/v1.0/generateThumbnail",
+        qs: {
+            width: 192,
+            height: 128,
+            smartCropping: true
+        },
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Ocp-Apim-Subscription-Key': cfg.visionApiKey
+        },
+        json: true,
+        body: {
+            url: publicUrl
+        }
+    };
+    request(options)
+        .on('error', function(err) {
+            throw err;
+        })
+        .on('end', function() {
+            console.log(["Created ", uploadFile.originalname, " thumbnail."].join(''));
+        })
+        .pipe(saveThumbnailToAzure());
     }
 
     function saveThumbnailToAzure() {
@@ -121,7 +114,7 @@ function imageHandlerMiddleware(req, res) {
         var options = {
             url: "https://api.projectoxford.ai/vision/v1.0/analyze",
             qs: {
-                visualFeatures: "Categories,Tags,Description,Faces,ImageType,Color"
+                visualFeatures: "Description"
             },
             method: 'POST',
             headers: {
@@ -144,13 +137,16 @@ function imageHandlerMiddleware(req, res) {
 
     function saveAnalysisResults(result) {
         var metaData = {
-            result: JSON.stringify(result),
             caption: result.description && result.description.captions && result.description.captions.length ?
                 result.description.captions[0].text :
-                "Unknown"
+                "Unknown",
+            tags: result.description && result.description.tags && result.description.tags.length ?
+                JSON.stringify(result.description.tags) :
+                []
         };
+
         blobService.setBlobMetadata(
-            'thumbnails',
+            'photos',
             uploadFile.originalname,
             metaData,
             function(err, result, response) {
@@ -176,7 +172,7 @@ function listBlobsMiddleware(req, res) {
 
     };
     blobService.listBlobsSegmented(
-        'thumbnails',
+        'photos',
         null,
         options,
         function(err, result, response) {
@@ -197,13 +193,17 @@ function listBlobsMiddleware(req, res) {
                     entry.name
                 ].join("");
                 entry.metadata = entry.metadata || {};
-                entry.metadata.result = entry.metadata.result ?
-                    JSON.parse(entry.metadata.result) :
-                    null;
             });
             res.status(200).json(result);
         }
     )
+}
+
+function noCacheMiddleware(req, res, next) {
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next();
 }
 
 function errorHandlerMiddleware(err, req, res, next) {
@@ -212,11 +212,4 @@ function errorHandlerMiddleware(err, req, res, next) {
         error: true,
         message: err.toString()
     });
-}
-
-function noCacheMiddleware(req, res, next) {
-    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    res.header('Expires', '-1');
-    res.header('Pragma', 'no-cache');
-    next();
 }

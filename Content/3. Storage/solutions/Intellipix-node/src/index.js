@@ -13,26 +13,16 @@
 
         function imageFilter(img) {
             var search = this.searchText;
-            var result = img && img.metadata && img.metadata.result;
-            var idx, captions, tags;
-            if(!search || !result) {
+            var tags = img && img.metadata && img.metadata.tags;
+
+            if(!search || !tags) {
                 return true;
             }
-            if(containsText(img.name, search)) {
+
+            if(containsText(tags, search)) {
                 return true;
             }
-            captions = (result.description && result.description.captions) || [];
-            for(idx in captions) {
-                if(containsText(captions[idx].text, search)) {
-                    return true;
-                }
-            }
-            tags = result.tags || [];
-            for(idx in tags) {
-                if(containsText(tags[idx].name, search)) {
-                    return true;
-                }
-            }
+
             return false;
         }
     }
@@ -83,8 +73,6 @@
         },
 
         showImageDetails: function(img) {
-            // console.log(img);
-            // console.log(JSON.stringify(img.metadata.result, null, 2));
             this.current = img;
             angular.element("#imageModal").modal();
         }
@@ -118,4 +106,3 @@
         .directive('onFileSelected', [fileContentBinderDirective]);
 
 }());
-

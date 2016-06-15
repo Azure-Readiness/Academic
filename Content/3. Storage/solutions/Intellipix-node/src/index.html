@@ -4,13 +4,10 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Azure Storage and Cognitive Services Lab</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+  <title>Intellipix</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
   <style>
     .ng-cloak { display: none !important; }
-    .image-list > .col-md-3:nth-child(4n+1) {
-      clear: both;
-    }
     a img {
       cursor: pointer;
     }
@@ -23,8 +20,9 @@
 
   <div class="container body-content" ng-controller="mainCtrl as ctrl">
 
-    <h1>Image Analysis</h1>
+    <h1>Intellipix</h1>
 
+    <!-- Panel containing image-upload and search controls -->
     <div class="well">
       <form ng-if="!ctrl.analysis.inProgress">
         <div class="row">
@@ -55,115 +53,40 @@
       </p>
     </div>
 
-    <div class="alert alert-success alert-dismissible" role="alert" ng-if="ctrl.analysis.result">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-      <strong>Success!</strong> Uploaded and analyzed {{ctrl.analysis.result.name}}
-    </div>
+    <!-- Panel showing error message if upload or image analysis fails -->
     <div class="alert alert-danger alert-dismissible" role="alert" ng-if="ctrl.analysis.error">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
       {{ctrl.analysis.error.message}}
     </div>
 
-    <div class="image-list row">
-      <div class="col-md-3" ng-repeat="img in ctrl.images | filter:ctrl.imageFilter">
-        <div class="thumbnail">
-
-          <a ng-click="ctrl.showImageDetails(img)">
-            <img ng-src="{{img.url}}">
+    <!-- Thumbnail images -->
+    <div class="row">
+      <div class="col-sm-12">
+          <a ng-click="ctrl.showImageDetails(img)" ng-repeat="img in ctrl.images | filter:ctrl.imageFilter">
+            <img ng-src="{{img.url}}" width="192" ng-attr-title={{img.metadata.caption}} style="padding-right: 16px; padding-bottom: 16px">
           </a>
-          <ul class="list-unstyled">
-            <li><strong>{{img.name}}</strong></li>
-            <li ng-repeat="caption in img.metadata.result.description.captions">
-              {{caption.text}}
-            </li>
-
-            <li><strong>Tags</strong></li>
-            <li>
-              <span ng-repeat="tag in img.metadata.result.tags">{{tag.name}} </span>
-            </li>
-
-            <li><strong>Details</strong></li>
-            <li>
-              {{img.metadata.result.metadata.width}} x {{img.metadata.result.metadata.height}}
-              (W x H {{img.metadata.result.metadata.format}})
-            </li>
-
-          </ul>
-        </div>
       </div>
     </div>
 
+    <!-- Modal window used to show enlarged images -->
     <div class="modal fade image-modal" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Image Details</h4>
+            <h4 class="modal-title" id="myModalLabel">{{ctrl.current.metadata.caption}}</h4>
           </div>
           <div class="modal-body">
             <img ng-src="{{ctrl.current.fullUrl}}">
-            <div class="row">
-              <div class="col-md-12">
-                <h3>{{ctrl.current.name}}</h3>
-                <div>
-                  {{ctrl.current.metadata.result.metadata.width}} x {{ctrl.current.metadata.result.metadata.height}}
-                  (W x H {{ctrl.current.metadata.result.metadata.format}})
-                </div>
-                <hr />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <strong>Captions</strong>
-              </div>
-              <div class="col-md-6">
-                <strong>Tags</strong>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <ul class="list-unstyled">
-                  <li ng-repeat="caption in ctrl.current.metadata.result.description.captions">
-                    {{caption.text}}
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar"
-                           aria-valuenow="{{caption.confidence * 100}}" aria-valuemin="0" aria-valuemax="100"
-                           ng-style="{ width: (caption.confidence * 100) + '%' }">
-                        {{caption.confidence * 100 | number:1}}%
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="col-md-6">
-                <ul class="list-unstyled">
-                  <li ng-repeat="tag in ctrl.current.metadata.result.tags">
-                    {{tag.name}}
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar"
-                           aria-valuenow="{{tag.confidence * 100}}" aria-valuemin="0" aria-valuemax="100"
-                           ng-style="{ width: (tag.confidence * 100) + '%' }">
-                        {{tag.confidence * 100 | number:1}}%
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
   <script src="index.js"></script>
 
