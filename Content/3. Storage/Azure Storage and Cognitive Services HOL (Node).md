@@ -10,7 +10,7 @@ Microsoft Azure Storage is a set of services that allows you to store large volu
 
 Data stored in Microsoft Azure Storage can be accessed over HTTP or HTTPS using straightforward REST APIs, or it can be accessed using rich client libraries available for many popular languages and platforms, including .NET, Java, Android, Node.js, PHP, Ruby, and Python. The [Azure Portal](https://portal.azure.com) includes features for working with Azure Storage, but richer functionality is available from third-party tools, many of which are free and some of which work cross-platform.
 
-In this lab, you will write a Node.js app that accepts images uploaded by users and stores the images in Azure blob storage. You will learn how to read and write blobs in Node.js, and how to use blob metadata to attach additional information to the blobs you create. You will also get first-hand experience using [Microsoft Cognitive Services](https://www.microsoft.com/cognitive-services/), a set of intelligent APIs for building equally intelligent applications. Specifically, you'll submit each image uploaded by the user to Cognitive Services' [Computer Vision API](https://www.microsoft.com/cognitive-services/en-us/computer-vision-api) to generate a caption for the image as well as searchable metadata describing the contents of the image, and to generate an image thumbnail. And at the end, you'll discover how easy it is to deploy apps to the cloud using Git and Visual Studio Code.
+In this lab, you will use Visual Studio Code to write a Node.js app that accepts images uploaded by users and stores the images in Azure blob storage. You will learn how to read and write blobs in Node.js, and how to use blob metadata to attach additional information to the blobs you create. You will also get first-hand experience using [Microsoft Cognitive Services](https://www.microsoft.com/cognitive-services/), a set of intelligent APIs for building equally intelligent applications. Specifically, you'll submit each image uploaded by the user to Cognitive Services' [Computer Vision API](https://www.microsoft.com/cognitive-services/en-us/computer-vision-api) to generate a caption for the image as well as searchable metadata describing the contents of the image and an image thumbnail. And at the end, you'll discover how easy it is to deploy apps to the cloud using Git and Visual Studio Code.
 
 <a name="Objectives"></a>
 ### Objectives ###
@@ -20,7 +20,7 @@ In this hands-on lab, you will learn how to:
 - Create a storage account and containers using the Azure Portal
 - Write a Node.js app in Visual Studio Code and deploy it to Azure using Git
 - Read and write blobs and attach metadata to them
-- Use the Computer Vision API to extract information from images
+- Use the Computer Vision API to extract information from images and generate thumbnails
 - Use the cross-platform [Microsoft Azure Storage Explorer](http://storageexplorer.com/) to work with Azure Storage
 
 <a name="Prerequisites"></a>
@@ -201,7 +201,7 @@ In this exercise, you will acquire a subscription key allowing you to call the C
 
 In this exercise, you will create a new Web app in Visual Studio Code and add code to upload images, write them to blob storage, display them in a Web page, generate thumbnails, captions, and keywords using the Computer Vision API, and perform keyword searches on uploaded images. The app will be named Intellipix (for "Intelligent Pictures") and will be accessed through your browser. The server-side code will be written in JavaScript and Node.js. The code that runs in the browser will be written in JavaScript and will leverage two of the most popular class libraries on the planet: [AngularJS](https://angularjs.org/) and [Bootstrap](http://getbootstrap.com/). 
 
-1. Create a project directory named "Intellipix" for the lab in the location of your choice — for example, "C:\DXLabs\Intellipix."
+1. Create a project directory named "Intellipix" in the location of your choice — for example, "C:\DXLabs\Intellipix."
 
 1. Open a Command Prompt window and execute the following command, substituting the Computer Vision API key you copied to the clipboard in the previous exercise for *vision_api_key*:
 
@@ -514,7 +514,7 @@ var express = require('express');
     }
 	```
 	
-	> Add description
+	> This is the code that executes in Node.js on the server. Points of interest include the *saveImageToAzure* function, which saves an uploaded image in blob storage using APIs in the Azure Storage Client Library for Node.js, the *createThumbnailFromImage* function, which uses the Computer Vision API to generate an image thumbnail, and the *analyzeImage* function, which uses the Computer Vision API to generate a caption and a list of keywords describing the image. Another function you might care to inspect is *saveAnalysisResults*, which writes the caption and keywords to blob metadata. Finally, take a moment to examine the *listBlobsMiddleware* function, which enumerates the photos uploaded to the site by enumerating the blobs in the "photos" container. 
 
 1. Place the mouse cursor over "INTELLIPIX" in Visual Studio Code's Explorer window and click the **New Folder** button that appears. Name the new folder "src" (without quotation marks).
 
@@ -621,7 +621,7 @@ var express = require('express');
     </html>
 	```
 
-	> Add description
+	> This is the HTML file containing the site's one and only page. It uses Bootstrap's [grid layout system](http://v4-alpha.getbootstrap.com/layout/grid/) to align elements on the page, and it uses AngularJS to make the page dynamic. Notice the ng- attributes such as ng-click and ng-src attached to some of the page's elements, as well as the "mustache" expressions in double curly braces (for example, {{ctrl.current.metadata.caption}}). These attributes and expressions are part of AngularJS and are frequently found in pages that use it.
 
 1. Add a file named index.js to the "src" folder and insert the following statements:
 
@@ -736,7 +736,7 @@ var express = require('express');
     }());
 	```
 
-	> Add description
+	> This file contains JavaScript code that runs on the client. Among other things, it provides support for uploading images from the browser, displaying an enlarged version of an image when the image thumbnail is clicked, and filtering the thumbnails shown on the page when the user types in the search box. Much of this is wrapped in an AngularJS controller, which manages the flow of data in an AngularJS application.
 
 1. Use Visual Studio Code's **File -> Save All** command to save all of your changes.
 
@@ -834,7 +834,7 @@ In this exercise, you will create an Azure Web App and deploy Intellipix to it u
 
     _Creating a new Azure Web App_
 
-1. In the "Web App" blade, enter a name for the Azure Web App. The name must be unique within Azure since it ultimately becomes part of a DNS name, so you will probably have to use something other than "Intellipix." Also make sure **Create new** is selected under **Resource Group** and enter a resource-group name such as "Intellipix." This name only has to be unique to a subscription. Then click **App service plan/Location**.
+1. In the "Web App" blade, enter a name for the Azure Web App. The name must be unique within Azure since it ultimately becomes part of a DNS name, so you will need to enter something other than "Intellipix." Also make sure **Create new** is selected under **Resource Group** and enter a resource-group name such as "Intellipix." This name only has to be unique to a subscription. Then click **App service plan/Location**.
 
     ![Naming the Azure Web App](Images/node-web-app-parameters.png)
 
@@ -977,7 +977,7 @@ In this hands-on lab, you learned how to:
 - Write code that uploads blobs to blob storage and attaches metadata to them
 - Consume blob metadata to implement search
 - Use Microsoft's Computer Vision API to generate image metadata and thumbnails
-- Use Git to deploy a Node.js app stored in a local repository to Azure
+- Use Git to deploy a Node.js app from a local repository to Azure
 
 There is much more that you could do to develop Intellipix and to leverage Azure even further. For example, you could add support for authenticating users and deleting photos, and rather than force the user to wait for Cognitive Services to process a photo following an upload, you could use [Azure Functions](https://azure.microsoft.com/en-us/services/functions/) to call the Computer Vision API asynchronously each time an image is added to blob storage. You could even use Cognitive Services to detect faces in the photos and analyze the emotions depicted by those faces. With the cloud as your platform, the sky is the limit (pun intended).
 
