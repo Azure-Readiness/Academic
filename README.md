@@ -24,22 +24,22 @@
                <table class="table table-bordered table-striped table-hover">
 					<tr>
 					   <td>Instructor-led</td>
-					   <td>[Lessons](Workshop/Content) | [Labs](Workshop/Content)</td>
+					   <td>[Lessons](Workshop/Lessons) | [Labs](Workshop/Labs)</td>
 					   <td>Learning modules to complement existing course instruction. Includes presentations, speaker notes, and hands-on labs.</td>
 					</tr>
 					<tr>
 					   <td>Problem Sets</td>
-					   <td>[Reference](TBD)</td>
+					   <td>[Reference](Problem Sets)</td>
 					   <td>Library of computer science problem sets using Microsoft Azure for use in courses. <i>Note: work in-progress.</i></td>
 					</tr>
 					<tr>
 					   <td>Tech Talks</td>
-					   <td>[Reference](TBD)</td>
+					   <td>[Reference](Tech Talks)</td>
 					   <td>Presentations on emerging or innovative tech topics with speakers notes and demos. </td>
 					</tr>
 					<tr>
 					   <td>Workshop</td>
-					   <td>[Lessons](TBD) | [Labs](TBD)</td>
+					   <td>[Lessons](Workshop/Content) | [Labs](Workshop/Content)</td>
 					   <td>1-day course on using cross-platform technologies with Microsoft Azure</td>
 					</tr>
 				 </table>
