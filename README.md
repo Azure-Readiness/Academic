@@ -24,7 +24,7 @@
                <table class="table table-bordered table-striped table-hover">
 					<tr>
 					   <td>Instructor-led</td>
-					   <td>[Lessons](Instructor&#8209;led/Lessons) | [Labs](Instructor&#8209;led/Labs)</td>
+					   <td>[Lessons](Instructor-Led/Lessons) | [Labs](Instructor-Led/Labs)</td>
 					   <td>Learning modules to complement existing course instruction. Includes presentations, speaker notes, and hands-on labs.</td>
 					</tr>
 					<tr>
