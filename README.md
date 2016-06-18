@@ -10,37 +10,43 @@
       <div class="container">
          <div class="jumbotron">
             <h1>Academic Resources for Computer Science</h1>
-            <p>June 2016 release. <i>Note: This repo is a work-in-progress and intended for review and collaboration with academic community. Please do not utilize these resources in public forums at this time.</i> Source: <a href="https://github.com/Azure-Readiness/Academic">https://github.com/Azure-Readiness/Academic</a></p>
-            <p>
-               <a href="http://aka.ms/CloudCamp-AzureTrial" class="btn btn-success">Sign up for Microsoft Azure</a>
+            <p><b>June 2016 release.</b> <i>Note: This repo is a work-in-progress and intended for review and collaboration with Microsoft developer advocates and the academic community. Please do not use these resources in public forums at this time.</i> Source: <a href="https://github.com/MSFTImagine/computerscience">https://github.com/MSFTImagine/computerscience</a></p>
+
+            <div class="hidden">This repo provides technical resources for faculty, students, and Microsoft developer advocates for use in computer science learning. The modules cover common cross-platform scenarios including mobile app dev, web dev, internet of things, data science, machine learning, and devops. Content delivery is divided into four groups: Instructor-led, Problem Sets, Tech Talks, and Workshops. 
+            <p>Most hands-on learning focuses on cross-platform technology deployment on the Microsoft Azure although most concepts can be applied to any cloud platform solution. Academic users can get free Azure from various programs like 
+            <a href="https://azure.microsoft.com/en-us/free/">Free Azure Trial</a>, 
+            <a href="https://www.dreamspark.com/student/default.aspx">Microsoft Imagine</a>, 
+            <a href="http://www.microsoftazurepass.com/">Azure Pass</a>,
+            <a href="https://www.microsoftazurepass.com/azureu">AzureU</a>,
+            <a href="https://www.visualstudio.com/en-us/products/visual-studio-dev-essentials-vs.aspx">Visual Studio Dev Essentials</a>, or
+            <a href="http://research.microsoft.com/en-us/projects/azure/default.aspx">Azure for Research</a>.
             </p>
-            <div class="hidden">This repo provides technical resources for faculty, students, and Microsoft developer advocates for use in computer science learning forums. There are four categories: Instructor-led, Problem Sets, Tech Talks, and Workshops. The content covers common cross-platform scenarios for learners including mobile app dev (C#/Xamarin), web dev (JavaScript, Node.JS), and data science with machine learning (Hadoop, Spark). Hands-on learning includes deployment on cloud solutions like Microsoft Azure.  </div>
-         </div>
+            <p> Your feedback is appreciated - please fork this repo and contribute!  
          <div class="panel panel-default">
             <div class="panel-heading">
-               <h4 class="panel-title">Available resources</h4>
+               <h3 class="panel-title">Available academic resources</h3>
             </div>
             <div class="panel-body">
                <table class="table table-bordered table-striped table-hover">
 					<tr>
 					   <td>Instructor-led</td>
-					   <td>[Lessons](Instructor-Led/Lessons) | [Labs](Instructor-Led/Labs)</td>
+					   <td>[Link](TBD)</td>
 					   <td>Learning modules to complement existing course instruction. Includes presentations, speaker notes, and hands-on labs.</td>
 					</tr>
 					<tr>
 					   <td>Problem Sets</td>
-					   <td>[Reference](Problem Sets)</td>
-					   <td>Library of computer science problem sets using Microsoft Azure for use in courses. <i>Note: work in-progress.</i></td>
+					   <td>[Link](TBD)</td>
+					   <td>Library of computer science problem sets using Microsoft Azure for use in courses.</td>
 					</tr>
 					<tr>
 					   <td>Tech Talks</td>
-					   <td>[Reference](Tech Talks)</td>
+					   <td>[Link](TBD)</td>
 					   <td>Presentations on emerging or innovative tech topics with speakers notes and demos. </td>
 					</tr>
 					<tr>
 					   <td>Workshop</td>
-					   <td>[Lessons](Workshop/Content) | [Labs](Workshop/Content)</td>
-					   <td>1-day course on using cross-platform technologies with Microsoft Azure</td>
+					   <td>[Link](TBD)</td>
+					   <td>1-day hands-on lab using cross-platform technologies with Microsoft Azure</td>
 					</tr>
 				 </table>
 			</div>
